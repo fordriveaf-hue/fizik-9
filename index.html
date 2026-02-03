@@ -66,10 +66,10 @@ fetch(apiUrl)
       if (file.type === "file") {
         const li = document.createElement("li");
         const fileName = decodeURIComponent(file.name); // فارسی درست نمایش داده شود
-        li.innerHTML = 
+        li.innerHTML = `
           <span>${fileName}</span>
           <a href="${file.download_url}" download>دانلود</a>
-        ;
+        `;
         list.appendChild(li);
       }
     });
@@ -82,3 +82,4 @@ fetch(apiUrl)
 
 </body>
 </html>
+
