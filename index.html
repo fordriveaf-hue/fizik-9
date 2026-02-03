@@ -48,13 +48,10 @@ a:hover { background: #0b7dda; }
 </div>
 
 <script>
-// ==== تنظیمات GitHub ====
-const GITHUB_USER = "fordriveaf-hue";
-const REPO_NAME  = "files-class";
-const FOLDER     = "files";
+// ==== fetch مستقیم به URL API GitHub ====
+const apiUrl = "https://api.github.com/repos/fordriveaf-hue/files-class/contents/files";
 
-// ==== درخواست API GitHub ====
-fetch(https://api.github.com/repos/fordriveaf-hue/files-class/contents/files
+fetch(apiUrl)
   .then(response => response.json())
   .then(files => {
     const list = document.getElementById("fileList");
@@ -85,4 +82,3 @@ fetch(https://api.github.com/repos/fordriveaf-hue/files-class/contents/files
 
 </body>
 </html>
-
