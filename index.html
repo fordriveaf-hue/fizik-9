@@ -2,53 +2,115 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>فایل‌های درس فیزیک</title>
+<title>فایل‌های درس فیزیک(و ریاضی موقتا)</title>
+
 <style>
 body {
-  font-family: Tahoma, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0; padding: 0;
+  font-family: "Vazirmatn", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #dfe9f3, #ffffff);
+  margin: 0;
+  padding: 0;
 }
+
+/* پنل اصلی */
 .panel {
-  max-width: 700px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #ccc;
+  max-width: 750px;
+  margin: 50px auto;
+  background: #ffffffcc;
+  backdrop-filter: blur(10px);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  animation: fadeIn 0.7s ease;
 }
-h2 { text-align: center; color: #333; }
-ul { list-style: none; padding: 0; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+/* لیست */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 li {
-  background: #eef;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 5px;
+  background: #f0f6ff;
+  margin: 12px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* دکمه دانلود */
 a {
   text-decoration: none;
   color: white;
-  background: #2196f3;
-  padding: 5px 10px;
-  border-radius: 4px;
+  background: #007bff;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: background 0.2s ease;
 }
-a:hover { background: #0b7dda; }
+
+a:hover {
+  background: #0056d2;
+}
+
+/* آیکون فایل */
+.file-icon {
+  margin-left: 8px;
+  font-size: 18px;
+}
+
+/* فوتر */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 15px 0;
+  color: #555;
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.footer:hover {
+  opacity: 1;
+}
 </style>
 </head>
+
 <body>
 
 <div class="panel">
   <h2>📘 فایل‌های درس فیزیک</h2>
   <ul id="fileList">
-    <li>در حال بارگذاری...</li>
+    <li>⏳ در حال بارگذاری...</li>
   </ul>
 </div>
 
+<footer class="footer">
+  © 2025 — تمامی حقوق محفوظ است | آرشام فاضل
+</footer>
+
 <script>
-// ==== URL مستقیم API GitHub ====
 const apiUrl = "https://api.github.com/repos/fordriveaf-hue/files-class/contents/files";
 
 fetch(apiUrl)
@@ -62,24 +124,29 @@ fetch(apiUrl)
       return;
     }
 
+    // مرتب‌سازی بر اساس نام
+    files.sort((a, b) => a.name.localeCompare(b.name, "fa"));
+
     files.forEach(file => {
       if (file.type === "file") {
         const li = document.createElement("li");
-        const fileName = decodeURIComponent(file.name); // فارسی درست نمایش داده شود
+        const fileName = decodeURIComponent(file.name);
+
         li.innerHTML = `
-          <span>${fileName}</span>
+          <span><span class="file-icon">📄</span>${fileName}</span>
           <a href="${file.download_url}" download>دانلود</a>
         `;
+
         list.appendChild(li);
       }
     });
   })
   .catch(err => {
     console.error("خطا در دریافت فایل‌ها:", err);
-    document.getElementById("fileList").innerHTML = "<li>خطا در دریافت فایل‌ها</li>";
+    document.getElementById("fileList").innerHTML =
+      "<li>⚠️ خطا در دریافت فایل‌ها</li>";
   });
 </script>
 
 </body>
 </html>
-
