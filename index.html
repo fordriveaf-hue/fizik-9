@@ -2,49 +2,86 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>پنل دانلود فیزیک</title>
-<link rel="stylesheet" href="style.css">
+<title>فایل‌های درس فیزیک</title>
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0; padding: 0;
+}
+.panel {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ccc;
+}
+h2 { text-align: center; color: #333; }
+ul { list-style: none; padding: 0; }
+li {
+  background: #eef;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+a {
+  text-decoration: none;
+  color: white;
+  background: #2196f3;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+a:hover { background: #0b7dda; }
+</style>
 </head>
 <body>
 
 <div class="panel">
   <h2>📘 فایل‌های درس فیزیک</h2>
-  <p class="desc">برای دانلود روی دکمه فایل کلیک کنید</p>
-  <ul id="fileList">در حال بارگذاری...</ul>
+  <ul id="fileList">
+    <li>در حال بارگذاری...</li>
+  </ul>
 </div>
 
 <script>
+// ==== تنظیمات GitHub ====
 const GITHUB_USER = "fordriveaf-hue";
 const REPO_NAME  = "files-class";
 const FOLDER     = "files";
 
+// ==== درخواست API GitHub ====
 fetch(https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FOLDER})
-  .then(res => res.json())
+  .then(response => response.json())
   .then(files => {
     const list = document.getElementById("fileList");
     list.innerHTML = "";
 
+    if (!Array.isArray(files) || files.length === 0) {
+      list.innerHTML = "<li>فایلی موجود نیست</li>";
+      return;
+    }
+
     files.forEach(file => {
       if (file.type === "file") {
         const li = document.createElement("li");
+        const fileName = decodeURIComponent(file.name); // فارسی درست نمایش داده شود
         li.innerHTML = 
-          <span>${file.name}</span>
+          <span>${fileName}</span>
           <a href="${file.download_url}" download>دانلود</a>
         ;
         list.appendChild(li);
       }
     });
-
-    if (!files.length) {
-      list.innerHTML = "<li>فایلی موجود نیست</li>";
-    }
   })
-  .catch(() => {
-    document.getElementById("fileList").innerHTML =
-      "<li>خطا در دریافت فایل‌ها</li>";
+  .catch(err => {
+    console.error("خطا در دریافت فایل‌ها:", err);
+    document.getElementById("fileList").innerHTML = "<li>خطا در دریافت فایل‌ها</li>";
   });
 </script>
 
 </body>
-
 </html>
