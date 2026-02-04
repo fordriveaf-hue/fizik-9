@@ -2,61 +2,107 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>فایل‌های درس فیزیک(و ریاضی موقتا)</title>
+<title>فایل‌های درس ریاضی</title>
 
 <style>
 body {
   font-family: "Vazirmatn", Tahoma, sans-serif;
-  background: linear-gradient(135deg, #dfe9f3, #ffffff);
   margin: 0;
   padding: 0;
+  transition: background 0.4s ease, color 0.4s ease;
 }
+
+/* حالت روشن */
+body.light {
+  background: linear-gradient(135deg, #e8eef7, #ffffff);
+  color: #222;
+}
+
+/* حالت تاریک */
+body.dark {
+  background: linear-gradient(135deg, #0d1117, #1b1f24);
+  color: #e6e6e6;
+}
+
+/* دکمه دارک مود */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: #444;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  z-index: 1000;
+}
+.toggle-btn:hover { background: #222; }
 
 /* پنل اصلی */
 .panel {
-  max-width: 750px;
+  max-width: 800px;
   margin: 50px auto;
-  background: #ffffffcc;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px);
   padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  animation: fadeIn 0.7s ease;
+  border-radius: 18px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+  animation: fadeIn 0.8s ease;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+body.dark .panel {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(25px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 h2 {
   text-align: center;
-  color: #333;
-  font-size: 26px;
-  margin-bottom: 25px;
+  font-size: 28px;
+  margin-bottom: 10px;
 }
 
-/* لیست */
+/* شمارنده بازدید */
+#views {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+/* لیست فایل‌ها */
 ul {
   list-style: none;
   padding: 0;
 }
 
 li {
-  background: #f0f6ff;
+  background: rgba(240, 246, 255, 0.7);
   margin: 12px 0;
   padding: 14px 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.4s ease;
+}
+
+body.dark li {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
 }
 
 li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 /* دکمه دانلود */
@@ -67,11 +113,11 @@ a {
   padding: 7px 14px;
   border-radius: 6px;
   font-size: 14px;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
-
 a:hover {
   background: #0056d2;
+  transform: scale(1.05);
 }
 
 /* آیکون فایل */
@@ -85,22 +131,41 @@ a:hover {
   text-align: center;
   margin-top: 40px;
   padding: 15px 0;
-  color: #555;
   font-size: 14px;
   opacity: 0.8;
   transition: opacity 0.3s ease;
 }
+.footer:hover { opacity: 1; }
 
-.footer:hover {
-  opacity: 1;
+/* ریسپانسیو موبایل */
+@media (max-width: 600px) {
+  .panel {
+    margin: 20px;
+    padding: 18px;
+  }
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  a {
+    width: 100%;
+    text-align: center;
+  }
 }
 </style>
 </head>
 
-<body>
+<body class="light">
+
+<div class="toggle-btn" onclick="toggleDarkMode()">🌙 حالت تاریک</div>
 
 <div class="panel">
-  <h2>📘 (فایل‌های درس فیزیک و (ریاضی موقتا</h2>
+  <h2>📘 فایل‌های درس ریاضی</h2>
+
+  <!-- شمارنده بازدید شخصی -->
+  <div id="views">تعداد بازدید شما: ...</div>
+
   <ul id="fileList">
     <li>⏳ در حال بارگذاری...</li>
   </ul>
@@ -111,6 +176,23 @@ a:hover {
 </footer>
 
 <script>
+/* دارک مود */
+function toggleDarkMode() {
+  const body = document.body;
+  body.classList.toggle("dark");
+  body.classList.toggle("light");
+
+  document.querySelector(".toggle-btn").innerText =
+    body.classList.contains("dark") ? "☀️ حالت روشن" : "🌙 حالت تاریک";
+}
+
+/* شمارنده بازدید شخصی */
+let myViews = localStorage.getItem("my_math_views") || 0;
+myViews++;
+localStorage.setItem("my_math_views", myViews);
+document.getElementById("views").innerText = "تعداد بازدید شما: " + myViews;
+
+/* دریافت فایل‌ها از گیت‌هاب */
 const apiUrl = "https://api.github.com/repos/fordriveaf-hue/files-class/contents/files";
 
 fetch(apiUrl)
@@ -124,7 +206,6 @@ fetch(apiUrl)
       return;
     }
 
-    // مرتب‌سازی بر اساس نام
     files.sort((a, b) => a.name.localeCompare(b.name, "fa"));
 
     files.forEach(file => {
@@ -142,7 +223,6 @@ fetch(apiUrl)
     });
   })
   .catch(err => {
-    console.error("خطا در دریافت فایل‌ها:", err);
     document.getElementById("fileList").innerHTML =
       "<li>⚠️ خطا در دریافت فایل‌ها</li>";
   });
@@ -150,5 +230,3 @@ fetch(apiUrl)
 
 </body>
 </html>
-
-
